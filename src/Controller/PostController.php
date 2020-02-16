@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\PostRepository;
 use App\Form\PostType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Services\FileUploader;
 
 /**
  * @Route("/post", name="post.")
@@ -30,7 +31,7 @@ class PostController extends AbstractController
     /**
      * @Route("/create", name="create")
      */
-    public function create(Request $request)
+    public function create(Request $request, FileUploader $fileUploader)
     {
         $post = new Post();
 
@@ -42,10 +43,19 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted()) {
           $em = $this->getDoctrine()->getManager();
-          dump($post);
+          $file = $request->files->get('post')['attachment'];
 
-          $em->persist($post);
-          $em->flush();
+          /** @var UploadedFile $file */
+          if($file) {
+            $filename =  $fileUploader->uploadFile($file);
+
+            $post->setImage($filename);
+
+            $em->persist($post);
+            $em->flush();
+          }
+
+          return $this->redirect($this->generateUrl('post.index'));
         }
 
         return $this->render('post/create.html.twig', [

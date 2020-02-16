@@ -17,19 +17,64 @@
 
     <nav class="indigo">
       <div class="nav-wrapper">
-        <a href=" {{ path('home') }} " class="brand-logo">Logo</a>
+        <a href=" {{ path('home') }} " class="brand-logo" style="margin-left: 15px;">User-Control</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+          <i class="material-icons">menu</i>
+        </a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li>
-            <a href=" {{ path('home') }} ">Home</a>
-          </li>
-          <li>
-            <a href=" {{ path('custom', {id: 'Ricardo'} ) }} ">Component</a>
-          </li>
+          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <li>
+              <a href=" {{ path('home') }} ">Home</a>
+            </li>
+            <li>
+              <a href=" {{ path('custom', {id: 'Ricardo'} ) }} ">Component</a>
+            </li>
+            <li>
+              <a href=" {{ path('post.index' ) }} ">Posts</a>
+            </li>
+            <li>
+              <a href=" {{ path('app_logout') }} ">
+                <i class="material-icons">close</i>
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </nav>
 
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+      <ul class="sidenav" id="mobile-demo">
+        <li>
+          <div class="user-view">
+            <div class="background">
+              <img src="/uploads/8a99602f9608f89d434fb956b8327796.jpeg">
+            </div>
+            <a href="#user"><img class="circle" src="/uploads/8a99602f9608f89d434fb956b8327796.jpeg"></a>
+            <a href="#name">
+              <span class="white-text name">John Doe</span></a>
+            <a href="#email">
+              <span class="white-text email">jdandturk@gmail.com</span></a>
+          </div>
+        </li>
+        <li>
+          <a href=" {{ path('home') }} ">Home</a>
+        </li>
+        <li>
+          <a href=" {{ path('custom', {id: 'Ricardo'} ) }} ">Component</a>
+        </li>
+        <li>
+          <a href=" {{ path('post.index' ) }} ">Posts</a>
+        </li>
+        <li>
+          <a href=" {{ path('app_logout') }} " class="waves-effect waves-light indigo btn-large">
+            Logout
+          </a>
+        </li>
+      </ul>
+    {% endif %}
+
     {% block body %}{% endblock %}
+
     {% block javascripts %}
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -37,6 +82,9 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
       <script type="text/javascript">
         $(document).ready(function() {
+          $('.sidenav').sidenav();
+          $('select').formSelect();
+          $('.materialboxed').materialbox();
           if ($('#post_save')) {
             $('#post_save').append('<i class="material-icons right">send</i>');
           }
